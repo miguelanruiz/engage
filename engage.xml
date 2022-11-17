@@ -2,7 +2,7 @@
    <name>Simple Engage Service</name>
    <key>engage</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/miguelanruiz/engage/master/icon.png</logo>
+   <logo>https://raw.githubusercontent.com/miguelanruiz/engage/master/engage.svg</logo>
    <description>
       <short>
          <en>Simple Engage GLPI plugin.</en>
@@ -19,7 +19,8 @@
    <issues>https://github.com/miguelanruiz/engage/issues</issues>
    <readme>https://github.com/miguelanruiz/engage/blob/master/README.md</readme>
    <authors>
-      <author>Imagunet, Miguel Ruiz</author>
+      <author>Imagunet</author>
+      <author>Miguel Ruiz</author>
    </authors>
    <versions>
       <version>

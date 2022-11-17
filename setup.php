@@ -76,7 +76,7 @@ function plugin_version_engage()
         'name'           => 'Simple Engage service',
         'shortname'      => 'engage',
         'version'        => PLUGIN_ENGAGE_VERSION,
-        'author'         => '<a href="https://www.imagunet.com">Imagunet, Miguel Ruiz\'</a>',
+        'author'         => '<a href="https://www.imagunet.com">Imagunet, Miguel Ruiz</a>',
         'license'        => 'GPLv3+',
         'homepage'       => 'https://github.com/miguelanruiz/engage/',
         'requirements'   => [
