@@ -41,34 +41,36 @@ function plugin_engage_install()
    $default_charset = DBConnection::getDefaultCharset();
    $default_collation = DBConnection::getDefaultCollation();
    $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
-   
+
    $migration = new Migration(PLUGIN_ENGAGE_VERSION);
 
    $table = getTableForItemtype('PluginEngageConfig');
 
    if (!$DB->tableExists($table)) {
+      
       $query = "CREATE TABLE IF NOT EXISTS `{$table}` (
-	          `id` INT {$default_key_sign} NOT NULL,
+               `id` INT {$default_key_sign} NOT NULL,
                   `users_id_tech` INT DEFAULT NULL,
                   `itil_followup` INT DEFAULT NULL,
                   `entities_id` INT DEFAULT NULL,
                   `is_recursive` INT DEFAULT NULL,
                   PRIMARY KEY  (`id`)
-	       ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+            ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
       $DB->queryOrDie($query, $DB->error());
-      Toolbox::logDebug("Table doesnt exist... creating.");
-   }
-   $migration->displayMessage("Initialize configuration Engage plugin.");
 
-   $query = "INSERT INTO `$table`
-                         (id, users_id_tech, itil_followup)
-                   VALUES (1, NULL, NULL)";
-   $DB->queryOrDie($query, 'Error during update glpi_engage_configs'.
+      Toolbox::logDebug("Table doesn't `{$table}` exist... creating.");
+
+      $query = "INSERT INTO `$table`
+                           (id, users_id_tech, itil_followup)
+                     VALUES (1, NULL, NULL)";
+      $DB->queryOrDie($query, "Error during update `{$table}`.".
                                  "<br>" . $DB->error());
+   }
 
+   $migration->displayMessage("Initialize configuration Engage plugin.");
    $migration->executeMigration();
 
-    return true;
+   return true;
 }
 
 /**
@@ -79,13 +81,14 @@ function plugin_engage_install()
 function plugin_engage_uninstall()
 {
    global $DB;
-    $config = getTableForItemtype('PluginEngageConfig');
+   $config = getTableForItemtype('PluginEngageConfig');
 
-    $tables = [
+   $tables = [
       $config
-    ];
+   ];
 
-    foreach ($tables as $table) {
+   foreach ($tables as $table) {
+
       $tablename = $table;
 
       if ($DB->tableExists($tablename)) {
@@ -94,6 +97,7 @@ function plugin_engage_uninstall()
             $DB->error()
          );
       }
-    }
-    return true;
+   }
+   
+   return true;
 }

@@ -9,8 +9,9 @@
          <fr>Plugin GLPI Engage</fr>
       </short>
       <long>
-         <en>A long description for Simple Engage Service GLPI plugin.</en>
-         <fr>Un description longue pour le plugin GLPI Simple Engage Service</fr>
+         <en>Tool to perform automatic assignment and welcome message, known as Simple Engage Service GLPI plugin.</en>
+         <es>Herramienta para realizar asignación automática y mensaje de bienvenida, conocida como Simple Engage Service GLPI plugin.</es>
+         <fr>Outil permettant de réaliser l'affectation automatique et le message de bienvenue, connu sous le nom de plugin Simple Engage Service GLPI.</fr>
       </long>
    </description>
    <homepage>https://imagunet.com/</homepage>
@@ -27,20 +28,29 @@
       </version>
    </versions>
    <langs>
-      <lang>en_GB</lang>
+      <lang>en_US</lang>
       <lang>fr_FR</lang>
+      <lang>es_419</lang>
+      <lang>es_CL</lang>
    </langs>
    <license>GPL V3+</license>
-   <!--tags>
-      <en>
-         <tag>One tag</tag>
-         <tag>Another tag</tag>
-      </en>
+   <tags>
+      <es>
+         <tag>helpdesk</tag>
+         <tag>tiquete</tag>
+         <tag>tarea</tag>
+      </es>
       <fr>
-         <tag>Un tag</tag>
-         <tag>Un autre tag</tag>
+         <tag>helpdesk</tag>
+         <tag>ticket</tag>
+         <tag>tâche</tag>
       </fr>
-   </tags-->
+      <en>
+         <tag>helpdesk</tag>
+         <tag>ticket</tag>
+         <tag>task</tag>
+      </en>
+   </tags>
    <!--screenshots>
       <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot.png</screenshot>
       <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot2.png</screenshot>

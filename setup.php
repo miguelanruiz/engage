@@ -46,20 +46,21 @@ define("PLUGIN_ENGAGE_MAX_GLPI_VERSION", "10.0.99");
  */
 function plugin_init_engage()
 {
-   global $PLUGIN_HOOKS, $CFG_GLPI;
+    global $PLUGIN_HOOKS, $CFG_GLPI;
 
-   $Plugin = new Plugin();
+    $Plugin = new Plugin();
 
-   $PLUGIN_HOOKS['csrf_compliant']['engage'] = true;
-   if ($Plugin->isActivated('engage')) {
+    $PLUGIN_HOOKS['csrf_compliant']['engage'] = true;
+    if ($Plugin->isActivated('engage')) {
 
-      Plugin::registerClass('PluginEngageConfig', ['addtabon' => 'Config']);
-      Plugin::registerClass('PluginEngageProfile', ['addtabon' => ['Profile']]);
-      
-      $PLUGIN_HOOKS[Hooks::PRE_ITEM_FORM]['engage'] = ['PluginEngageConfig','displayTechnician'];
-      $PLUGIN_HOOKS[Hooks::ITEM_ADD]['engage'] = ['Ticket' => [ 'PluginEngageTicket','createFollowup']];
-      $PLUGIN_HOOKS['config_page']['engage'] = 'front/config.form.php';
-   }
+        Plugin::registerClass('PluginEngageConfig', ['addtabon' => 'Config']);
+        Plugin::registerClass('PluginEngageProfile', ['addtabon' => ['Profile']]);
+        
+        $PLUGIN_HOOKS[Hooks::PRE_ITEM_FORM]['engage'] = ['PluginEngageConfig','displayTechnician'];
+        $PLUGIN_HOOKS[Hooks::ITEM_ADD]['engage'] = ['Ticket' => [ 'PluginEngageTicket','createFollowup']];
+        $PLUGIN_HOOKS['config_page']['engage'] = 'front/config.form.php';
+
+    }
 }
 
 
@@ -71,20 +72,21 @@ function plugin_init_engage()
  */
 function plugin_version_engage()
 {
-   return [
-      'name'           => 'Simple Engage service',
-      'shortname'      => 'engage',
-      'version'        => PLUGIN_ENGAGE_VERSION,
-      'author'         => 'Imagunet, Miguel Ruiz',
-      'license'        => 'GPLv3+',
-      'homepage'       => '',
-      'requirements'   => [
-         'glpi' => [
-            'min' => PLUGIN_ENGAGE_MIN_GLPI_VERSION,
-            'max' => PLUGIN_ENGAGE_MAX_GLPI_VERSION,
-         ]
-      ]
-   ];
+    return [
+        'name'           => 'Simple Engage service',
+        'shortname'      => 'engage',
+        'version'        => PLUGIN_ENGAGE_VERSION,
+        'author'         => '<a href="https://www.imagunet.com">Imagunet, Miguel Ruiz\'</a>',
+        'license'        => 'GPLv3+',
+        'homepage'       => 'https://github.com/miguelanruiz/engage/',
+        'requirements'   => [
+            'glpi' => [
+                'min' => PLUGIN_ENGAGE_MIN_GLPI_VERSION,
+                'max' => PLUGIN_ENGAGE_MAX_GLPI_VERSION,
+                'dev' => false,
+            ]
+        ]
+    ];
 
 }
 
@@ -116,4 +118,11 @@ function plugin_engage_check_config($verbose = false)
         echo __('Installed / not configured', 'engage');
     }
     return false;
+}
+
+function plugin_engage_options()
+{
+    return [
+        'autoinstall_disabled' => true,
+    ];
 }

@@ -1,6 +1,13 @@
-# engage GLPI plugin
+# Simple Engage Service GLPI plugin
 
-Add your plugin description here.
+##### _Make it easy, simple and imagine_
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/miguelanruiz/engage/main/engage.png" alt="Simple Engage Service"/>
+</p>
+
+[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+
 
 ## Contributing
 
