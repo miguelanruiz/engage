@@ -2,30 +2,33 @@
 
 /**
  * -------------------------------------------------------------------------
- * engage plugin for GLPI
+ * engage plugin for GLPI is a tool designed to facilitate user assignment 
+ * and SLA compliance.
  * Copyright (C) 2022 by the engage Development Team.
  * -------------------------------------------------------------------------
+ * 
+ * LICENSE
  *
- * MIT License
+ * This file is part of Engage.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * Engage is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * Engage is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
+ * You should have received a copy of the GNU General Public License
+ * along with Engage. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @package     Engage
+ * @author      Miguel Angel Ruiz (miguelangelrtorresco@gmail.com)
+ * @copyright   Copyright (C) 2022 by the engage plugin team.
+ * @license     https://www.gnu.org/licenses/gpl-3.0.txt GPLv3+   
+ * @link        https://github.com/miguelanruiz/engage
  * --------------------------------------------------------------------------
  */
 
@@ -46,29 +49,35 @@ function plugin_engage_install()
 
    $table = getTableForItemtype('PluginEngageConfig');
 
+   if (!$DB->allow_signed_keys){
+      $default_key_sign = "unsigned";
+      $migration->displayMessage("You need consider review config_db, your database should allow SignedKeys, if yes please configure it and reinstall.");
+      $migration->log("You need consider review config_db, your database should allow SignedKeys, if yes please configure it and reinstall.",true);
+   }
+
    if (!$DB->tableExists($table)) {
       
       $query = "CREATE TABLE IF NOT EXISTS `{$table}` (
                `id` INT {$default_key_sign} NOT NULL,
-                  `users_id_tech` INT DEFAULT NULL,
-                  `itil_followup` INT DEFAULT NULL,
+                  `users_id_tech` INT DEFAULT 0,
+                  `itil_followup` INT DEFAULT 0,
                   `entities_id` INT DEFAULT NULL,
                   `is_recursive` INT DEFAULT NULL,
                   PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
       $DB->queryOrDie($query, $DB->error());
 
-      Toolbox::logDebug("Table doesn't `{$table}` exist... creating.");
+      $migration->displayMessage("Table `{$table}` was created.");
 
       $query = "INSERT INTO `$table`
-                           (id, users_id_tech, itil_followup)
-                     VALUES (1, NULL, NULL)";
-      $DB->queryOrDie($query, "Error during update `{$table}`.".
+                           (id)
+                     VALUES (1)";
+      $DB->queryOrDie($query, "Error during install `{$table}`.".
                                  "<br>" . $DB->error());
    }
 
-   $migration->displayMessage("Initialize configuration Engage plugin.");
    $migration->executeMigration();
+   $migration->displayMessage("Installation of Engage plugin was executed.");
 
    return true;
 }

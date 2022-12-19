@@ -2,30 +2,33 @@
 
 /**
  * -------------------------------------------------------------------------
- * engage plugin for GLPI
+ * engage plugin for GLPI is a tool designed to facilitate user assignment 
+ * and SLA compliance.
  * Copyright (C) 2022 by the engage Development Team.
  * -------------------------------------------------------------------------
+ * 
+ * LICENSE
  *
- * MIT License
+ * This file is part of Engage.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * Engage is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * Engage is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
+ * You should have received a copy of the GNU General Public License
+ * along with Engage. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @package     Engage
+ * @author      Miguel Angel Ruiz (miguelangelrtorresco@gmail.com)
+ * @copyright   Copyright (C) 2022 by the engage plugin team.
+ * @license     https://www.gnu.org/licenses/gpl-3.0.txt GPLv3+   
+ * @link        https://github.com/miguelanruiz/engage
  * --------------------------------------------------------------------------
  */
 
@@ -53,7 +56,7 @@ function plugin_init_engage()
     $PLUGIN_HOOKS['csrf_compliant']['engage'] = true;
     if ($Plugin->isActivated('engage')) {
 
-        Plugin::registerClass('PluginEngageConfig', ['addtabon' => 'Config']);
+        Plugin::registerClass('PluginEngageConfig', ['addtabon' => ['Config']]);
         Plugin::registerClass('PluginEngageProfile', ['addtabon' => ['Profile']]);
         
         $PLUGIN_HOOKS[Hooks::PRE_ITEM_FORM]['engage'] = ['PluginEngageConfig','displayTechnician'];
@@ -73,7 +76,7 @@ function plugin_init_engage()
 function plugin_version_engage()
 {
     return [
-        'name'           => 'Simple Engage service',
+        'name'           => 'Simple Engage Service',
         'shortname'      => 'engage',
         'version'        => PLUGIN_ENGAGE_VERSION,
         'author'         => '<a href="https://www.imagunet.com">Imagunet, Miguel Ruiz</a>',

@@ -2,30 +2,33 @@
 
 /**
  * -------------------------------------------------------------------------
- * engage plugin for GLPI
+ * engage plugin for GLPI is a tool designed to facilitate user assignment 
+ * and SLA compliance.
  * Copyright (C) 2022 by the engage Development Team.
  * -------------------------------------------------------------------------
+ * 
+ * LICENSE
  *
- * MIT License
+ * This file is part of Engage.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * Engage is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * Engage is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
+ * You should have received a copy of the GNU General Public License
+ * along with Engage. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @package     Engage
+ * @author      Miguel Angel Ruiz (miguelangelrtorresco@gmail.com)
+ * @copyright   Copyright (C) 2022 by the engage plugin team.
+ * @license     https://www.gnu.org/licenses/gpl-3.0.txt GPLv3+   
+ * @link        https://github.com/miguelanruiz/engage
  * --------------------------------------------------------------------------
  */
 
@@ -57,34 +60,28 @@ class PluginEngageConfig extends CommonDBTM {
    /**
     * Display the menu of plugin
     *
-    * @global array $CFG_GLPI
-    * @param string $type
     */
-    public static function displayMenu($options = []){
-       global $CFG_GLPI;
-       $pfConfig = new PluginEngageConfig();
-       $pfConfig->fields['id'] = 1;
-       $pfConfig->showConfigForm();
-       //$pfConfig->display();
-    
-       return true;
-        
-    }
+   public static function displayMenu($options = []){
+      global $CFG_GLPI;
+      $pConfig = new PluginEngageConfig();
+      $pConfig->fields['id'] = 1;
+      $pConfig->showConfigForm();
+   
+      return true;
+      
+   }
 
 
    /**
     * Display the technician on Tickets
-    *
-    * @global array $CFG_GLPI
-    * @param string $type
     */
     public static function displayTechnician($options = []){
-       global $CFG_GLPI;
-       $pfConfig = new PluginEngageConfig();
-       $pfConfig->fields['id'] = 1;
-       $pfConfig->showTechnicianLabel($options);
-    
-       return true;
+      global $CFG_GLPI;
+      $pConfig = new PluginEngageConfig();
+      $pConfig->fields['id'] = 1;
+      $pConfig->showTechnicianLabel($options);
+   
+      return true;
     }
 
     /**
@@ -115,7 +112,7 @@ class PluginEngageConfig extends CommonDBTM {
             $input_class = "col-xxl-8 field-container";
             echo "<div class='$field_class'>";
             echo "<label class='$label_class'>".
-               _n('Engage', 'Engages', 3, 'engage').
+               __('Technician', 'engage').
             "</label>";
             echo "<div class='$input_class'>";
             echo "<span class='entity-badge' title='Technician in charge'><span class='text-nowrap'>".$whoare."</span></span>";
@@ -140,7 +137,7 @@ class PluginEngageConfig extends CommonDBTM {
       return self::$_instance;
    }
 
-/**
+   /**
     * Singleton for the unique config record
     */
    static function showConfigForm() {
@@ -154,15 +151,15 @@ class PluginEngageConfig extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Ticket in charge", "engage")."</td><td>";
-      User::dropdown(['name'   => "users_id_tech",
+      echo "<td>".__("New ticket in charge of", "engage")."</td><td>";
+      User::dropdown(['name'   => 'users_id_tech',
             'right'  => 'interface',
-	    'value'  => $config->fields['users_id_tech']
+            'value'  => $config->fields['users_id_tech']
       ]);
       echo "</td></tr>";
       echo "<td>".__("ITIL followup template to use", "engage")."</td><td>";
-      ITILFollowupTemplate::dropdown(['name'   => "name",
-	    'value'  => $config->fields['itil_followup']
+      ITILFollowupTemplate::dropdown(['name'   => 'itil_followup',
+            'value'  => $config->fields['itil_followup']
       ]);
       echo "</td></tr>";
 
@@ -189,80 +186,4 @@ class PluginEngageConfig extends CommonDBTM {
       }
       return true;
    }
-
-   /**
-    * Add name + value in configuration if not exist
-    *
-    * @param string $name
-    * @param string $value  
-    * @return integer|false integer is the id of this configuration name
-    */
-    public function addValue($name, $value)
-    { 
-        $existing_value = $this->getValue($name);
-        if (!is_null($existing_value)) {
-            return $existing_value;
-        } else {
-            return $this->add(['type'  => $name,
-                                 'value' => $value]);
-        }
-    }
-
-   /**
-    * Add multiple configuration values
-    *
-    * @param array $values configuration values, indexed by name
-    * @param boolean $update say if add or update in database
-    */
-    public function addValues($values, $update = true)
-    {
-
-        foreach ($values as $type => $value) {
-            if ($this->getValue($type) === null) {
-                $this->addValue($type, $value);
-            } elseif ($update == true) {
-                $this->updateValue($type, $value);
-            }
-        }
-    }
-
-    /**
-    * Update configuration value
-    *
-    * @param string $name name of configuration
-    * @param string $value
-    * @return boolean
-    **/
-    public function updateValue($name, $value)
-    {
-       
-       // retrieve current config
-        $config = current($this->find(['type' => $name]));
-       
-       // set in db
-        if (isset($config['id'])) {
-            $result = $this->update(['id' => $config['id'], 'value' => $value]);
-        } else {
-            $result = $this->add(['type' => $name, 'value' => $value]);
-        }
-         // set cache 
-        
-        return $result;
-    }
-
-
-    /**
-    * Get configuration value with name
-    *    
-    * @param string $name name in configuration                                     * @return null|string|integer
-    */
-    public function getValue($name)
-    {
-        
-        $config = current($this->find(['type' => $name]));
-        if (isset($config['value'])) {
-            return $config['value'];
-        }
-        return null;
-    }
 }
