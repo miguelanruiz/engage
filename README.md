@@ -15,7 +15,7 @@
 - Coming soon: Set a fixed delay time for greeting messages
 - Coming soon: Calendar-dependent welcome messages for each entity in GLPI
 
-Currently only available with tickets.
+Currently only available with tickets. You will need GLPI 10 to use it.
 
 ## Installation
 
