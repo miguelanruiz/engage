@@ -165,7 +165,9 @@ class PluginEngageConfig extends CommonDBTM {
             $config->getEmpty();
             }
             
-         if($config->isNewItem() || $config->fields['users_id_tech'] == PluginEngageConfig::CONFIG_PARENT){
+         if($config->isNewItem() 
+            || ($config->fields['users_id_tech'] == PluginEngageConfig::CONFIG_PARENT 
+               && !$config->fields['is_active'] == PluginEngageConfig::DISABLED)){
             continue;
          }
 
