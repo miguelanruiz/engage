@@ -62,6 +62,17 @@ class PluginEngageConfig extends CommonDBTM {
    }
 
    /**
+    * Check if the passed itemtype is in the blacklist
+    *
+    * @param  string $itemtype
+    *
+    * @return bool
+    */
+    public static function canItemtype($itemtype = '') {
+      return (!class_exists($itemtype) || $itemtype == 'Ticket');
+   }
+
+   /**
     * Display the menu of plugin
     *
     */
@@ -75,28 +86,42 @@ class PluginEngageConfig extends CommonDBTM {
       
    }
 
+   /**
+    * Singleton for the unique config record
+    */
+    static function getInstance($ID) {
+
+      if (!isset(self::$_instance)) {
+         self::$_instance = new self();
+         if (!self::$_instance->getFromDBByCrit(['entities_id' => $ID])) {
+            self::$_instance->getEmpty();
+         }
+      }
+      return self::$_instance;
+   }
+
+   /**
+    * Default values for instance
+    */
+   public function post_getEmpty(){
+      $this->fields['id'] = 0;
+      $this->fields['users_id_tech'] = 0;
+      $this->fields['itil_followup'] = 0;
+      $this->fields['entities_id'] = 0;
+      $this->fields['is_recursive'] = 1;
+      $this->fields['is_active'] = 1;
+   }
 
    /**
     * Display the technician on Tickets
     */
-    public static function displayTechnician($options = []){
+   public static function displayTechnician($options = []){
       global $CFG_GLPI;
       $pConfig = new PluginEngageConfig();
       $pConfig->fields['id'] = 1;
       $pConfig->showTechnicianLabel($options);
    
       return true;
-    }
-
-    /**
-    * Check if the passed itemtype is in the blacklist
-    *
-    * @param  string $itemtype
-    *
-    * @return bool
-    */
-   public static function canItemtype($itemtype = '') {
-      return (!class_exists($itemtype) || $itemtype == 'Ticket');
    }
 
    /**
@@ -117,25 +142,25 @@ class PluginEngageConfig extends CommonDBTM {
      *
      * @return array of criteria
      */
-    public static function getConfigForEntity($value = '') {
+   public static function getConfigForEntity($value = '') {
       // !='0' needed because consider as empty
-       $dbu = new DbUtils();
-       $table = getTableForItemtype('PluginEngageConfig');
-       $field = "$table.entities_id";
- 
-       $ancestors = [];
-       if (is_array($value)) {
-          $ancestors = $dbu->getAncestorsOf("glpi_entities", $value);
-          $ancestors = array_diff($ancestors, $value);
-       } else if (strlen($value) == 0) {
-          $ancestors = $_SESSION['glpiparententities'] ?? [];
-       } else {
-          $ancestors = $dbu->getAncestorsOf('glpi_entities', $value);
-       }
-       array_push($ancestors,$value);
-       $ancestors = array_reverse($ancestors);
-       $config = new self();
-       foreach ($ancestors as $key => $value) {
+      $dbu = new DbUtils();
+      $table = getTableForItemtype('PluginEngageConfig');
+      $field = "$table.entities_id";
+
+      $ancestors = [];
+      if (is_array($value)) {
+         $ancestors = $dbu->getAncestorsOf("glpi_entities", $value);
+         $ancestors = array_diff($ancestors, $value);
+      } else if (strlen($value) == 0) {
+         $ancestors = $_SESSION['glpiparententities'] ?? [];
+      } else {
+         $ancestors = $dbu->getAncestorsOf('glpi_entities', $value);
+      }
+      array_push($ancestors,$value);
+      $ancestors = array_reverse($ancestors);
+      $config = new self();
+      foreach ($ancestors as $key => $value) {
          if (!$config->getFromDBByCrit(['entities_id' => $value])) {
             $config->getEmpty();
             }
@@ -149,7 +174,7 @@ class PluginEngageConfig extends CommonDBTM {
          }
 
          return $config;
-       }
+      }
       return $config->getEmpty();
    }
 
@@ -183,33 +208,6 @@ class PluginEngageConfig extends CommonDBTM {
             echo "</div>";
          }
       }
-   }
-
-
-   /**
-    * Singleton for the unique config record
-    */
-   static function getInstance($ID) {
-
-      if (!isset(self::$_instance)) {
-         self::$_instance = new self();
-         if (!self::$_instance->getFromDBByCrit(['entities_id' => $ID])) {
-            self::$_instance->getEmpty();
-         }
-      }
-      return self::$_instance;
-   }
-
-   /**
-    * Default values for instance
-    */
-   public function post_getEmpty(){
-      $this->fields['id'] = 0;
-      $this->fields['users_id_tech'] = 0;
-      $this->fields['itil_followup'] = 0;
-      $this->fields['entities_id'] = 0;
-      $this->fields['is_recursive'] = 1;
-      $this->fields['is_active'] = 1;
    }
 
    /**
