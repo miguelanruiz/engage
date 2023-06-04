@@ -58,23 +58,19 @@ function plugin_engage_install()
    if (!$DB->tableExists($table)) {
       
       $query = "CREATE TABLE IF NOT EXISTS `{$table}` (
-               `id` INT {$default_key_sign} NOT NULL,
+               `id` INT {$default_key_sign} NOT NULL auto_increment,
                   `users_id_tech` INT DEFAULT 0,
                   `itil_followup` INT DEFAULT 0,
                   `entities_id` INT DEFAULT NULL,
-                  `is_recursive` INT DEFAULT NULL,
+                  `is_recursive` INT DEFAULT 1,
                   PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
       $DB->queryOrDie($query, $DB->error());
 
       $migration->displayMessage("Table `{$table}` was created.");
-
-      $query = "INSERT INTO `$table`
-                           (id)
-                     VALUES (1)";
-      $DB->queryOrDie($query, "Error during install `{$table}`.".
-                                 "<br>" . $DB->error());
    }
+
+   $migration->addField($table,'is_active','boolean',['value' => '1']);
 
    $migration->executeMigration();
    $migration->displayMessage("Installation of Engage plugin was executed.");

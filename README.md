@@ -3,7 +3,7 @@
 ##### _Make it easy, simple and imagine_
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/miguelanruiz/engage/master/engage.svg" alt="Simple Engage Service"/>
+  <img src="https://raw.githubusercontent.com/miguelanruiz/engage/master/engage.svg" alt="Simple Engage Service" style="max-width: 250px; max-height: 250px;"/>
 </p>
 
 ## Features
@@ -24,9 +24,9 @@ You must respect the name of the folder created in the plugins directory!
 ```sh
 $ su -s /bin/bash apache 
 $ cd ROOT_GLPI_DIR
-$ wget https://github.com/miguelanruiz/engage/releases/download/v1.0.1-rc.1/engage-v1.0.1-rc.1.tar.bz2
-$ tar xvf engage-v1.0.1-rc.1.tar.bz2
-$ rm engage-v1.0.1-rc.1.tar.bz2
+$ wget https://github.com/miguelanruiz/engage/releases/download/v1.0.1-rc.1/glpi-engage-v1.0.1-rc.1.tar.bz2
+$ tar xvf glpi-engage-v1.0.1-rc.1.tar.bz2
+$ rm glpi-engage-v1.0.1-rc.1.tar.bz2
 ```
 
 After that go to the GLPI plugins (GLPI WEB Instacne) administration and continue the configuration process. Click Install and then Activate.

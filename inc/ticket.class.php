@@ -103,7 +103,7 @@ class PluginEngageTicket extends CommonDBTM {
 	}
 
 	public static function createFollowup($item){
-		$config	   	    = PluginEngageConfig::getInstance();
+		$config	   	    = PluginEngageConfig::getConfigForEntity($item->getEntityID());
 
 		$template 	    = new ITILFollowupTemplate();
 
@@ -118,7 +118,8 @@ class PluginEngageTicket extends CommonDBTM {
 			($technician == 0) 
 			|| ($template_id == 0)
 			|| !Profile::haveUserRight($technician,Ticket::$rightname,Ticket::ASSIGN,$item->getEntityID())
-			|| !Profile::haveUserRight($technician,Ticket::$rightname,Ticket::STEAL,$item->getEntityID())){
+			|| !Profile::haveUserRight($technician,Ticket::$rightname,Ticket::STEAL,$item->getEntityID())
+			|| !$config-fields['is_active']){
 			//couldn't do something with null information
 			return;
 		}

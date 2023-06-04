@@ -56,7 +56,7 @@ function plugin_init_engage()
     $PLUGIN_HOOKS['csrf_compliant']['engage'] = true;
     if ($Plugin->isActivated('engage')) {
 
-        Plugin::registerClass('PluginEngageConfig', ['addtabon' => ['Config']]);
+        Plugin::registerClass('PluginEngageConfig', ['addtabon' => ['Entity']]);
         Plugin::registerClass('PluginEngageProfile', ['addtabon' => ['Profile']]);
         
         $PLUGIN_HOOKS[Hooks::PRE_ITEM_FORM]['engage'] = ['PluginEngageConfig','displayTechnician'];

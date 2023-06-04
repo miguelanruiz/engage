@@ -42,11 +42,18 @@ if (!$plugin->isInstalled('engage') || !$plugin->isActivated('engage')) {
 
 $config = new PluginEngageConfig();
 
+if (isset($_POST['add'])) {
+    $config->add($_POST);
+    Html::back();
+}
+
 if (isset($_POST['update'])) {
     $config->update($_POST);
     Html::back();
 }
 
-Html::redirect($CFG_GLPI["root_doc"]."/front/config.form.php?forcetab=PluginEngageConfig\$1");
+$id = Session::getActiveEntity();
+
+Html::redirect($CFG_GLPI["root_doc"]."/front/entity.form.php?forcetab=PluginEngageConfig\$1&id=".$id);
 
 //Html::footer();
