@@ -235,26 +235,28 @@ class PluginEngageConfig extends CommonDBTM {
       Dropdown::showYesNo("is_active", $config->fields['is_active']);
       echo "</td></tr>\n";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("New ticket in charge of", "engage")."</td><td>";
-      User::dropdown(['name'   => 'users_id_tech',
-            'right'  => 'interface',
-            'value'  => $config->fields['users_id_tech'],
-            'emptylabel' => $entity->getEntityID() ? __('Inherit from the parent'): Dropdown::EMPTY_VALUE,
-            'width'  => '250px'
-      ]);
-      echo "</td></tr>";
-      echo "<td>".__("ITIL followup template to use", "engage")."</td><td>";
-      ITILFollowupTemplate::dropdown(['name'   => 'itil_followup',
-            'value'  => $config->fields['itil_followup'],
-            'width'  => '250px',
-            'comments' => false
-      ]);
+      if($config->fields['is_active']){
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>".__("New ticket in charge of", "engage")."</td><td>";
+         User::dropdown(['name'   => 'users_id_tech',
+               'right'  => 'interface',
+               'value'  => $config->fields['users_id_tech'],
+               'emptylabel' => $entity->getEntityID() ? __('Inherit from the parent'): Dropdown::EMPTY_VALUE,
+               'width'  => '250px'
+         ]);
+         echo "</td></tr>";
+         echo "<td>".__("ITIL followup template to use", "engage")."</td><td>";
+         ITILFollowupTemplate::dropdown(['name'   => 'itil_followup',
+               'value'  => $config->fields['itil_followup'],
+               'width'  => '250px',
+               'comments' => false
+         ]);
 
-      echo "</td></tr>";
-      echo "</td><td>" . __('Recursive') . "</td><td colspan='3'>";
-      Dropdown::showYesNo("is_recursive", $config->fields['is_recursive']);
-      echo "</td></tr>\n";
+         echo "</td></tr>";
+         echo "</td><td>" . __('Recursive') . "</td><td colspan='3'>";
+         Dropdown::showYesNo("is_recursive", $config->fields['is_recursive']);
+         echo "</td></tr>\n";
+      }
 
       //Html::closeForm();
       $config->showFormButtons(['withtemplate' => 0,'candel'=> false]);
