@@ -32,6 +32,8 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
+
 class PluginEngageConfig extends CommonDBTM {
 
    static private $_instance = NULL;
@@ -41,6 +43,10 @@ class PluginEngageConfig extends CommonDBTM {
    
    const ENABLED             = 1;
    const DISABLED            = 0;
+
+   const INCIDENT            = 1;
+   const REQUEST             = 2;
+   const MIXED               = 3;
 
    static function canCreate() {
       return Session::haveRight('config', UPDATE);
@@ -110,6 +116,7 @@ class PluginEngageConfig extends CommonDBTM {
       $this->fields['entities_id'] = 0;
       $this->fields['is_recursive'] = 1;
       $this->fields['is_active'] = 1;
+      $this->fields['ticket_type'] = self::MIXED;
    }
 
    /**
@@ -238,6 +245,11 @@ class PluginEngageConfig extends CommonDBTM {
       echo "</td></tr>\n";
 
       if($config->fields['is_active']){
+         TemplateRenderer::getInstance()->display('@engage/pages/entity_setup.html.twig', [
+            'canedit' => Session::haveRight(self::$rightname, UPDATE),
+            'config'  => $config,
+         ]);
+
          echo "<tr class='tab_bg_1'>";
          echo "<td>".__("New ticket in charge of", "engage")."</td><td>";
          User::dropdown(['name'   => 'users_id_tech',
