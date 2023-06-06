@@ -44,9 +44,9 @@ class PluginEngageConfig extends CommonDBTM {
    const ENABLED             = 1;
    const DISABLED            = 0;
 
+   const MIXED               = 0;
    const INCIDENT            = 1;
    const REQUEST             = 2;
-   const MIXED               = 3;
 
    static function canCreate() {
       return Session::haveRight('config', UPDATE);
@@ -226,54 +226,44 @@ class PluginEngageConfig extends CommonDBTM {
 
       $config = self::getInstance($entity->getEntityID());
 
-      //$config->showFormHeader();
-      $rand = mt_rand();
-      echo "";
-      echo "<div>";
-      echo "<form name='engageconfig_form$rand' id='engageconfig_form$rand' method='post' action='";
-      echo self::getFormUrl()."'>";
-      echo "<input type=hidden name='entities_id' value='".$entity->getEntityID()."'>";
-      echo "<table class='tab_cadre_fixe'>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th colspan='2' class='center' width='100%'>".__('Tech in charge')."</th>";
-      echo "</tr>";
-
-      echo "</td></tr>";
-      echo "</td><td>" . __('Enable') . "</td><td colspan='3'>";
-      Dropdown::showYesNo("is_active", $config->fields['is_active']);
-      echo "</td></tr>\n";
+      TemplateRenderer::getInstance()->display('@engage/pages/entity_setup.html.twig', [
+         'canedit'   => Session::haveRight(self::$rightname, UPDATE),
+         'config'    => $config
+      ]);
 
       if($config->fields['is_active']){
-         TemplateRenderer::getInstance()->display('@engage/pages/entity_setup.html.twig', [
-            'canedit' => Session::haveRight(self::$rightname, UPDATE),
-            'config'  => $config,
-         ]);
-
-         echo "<tr class='tab_bg_1'>";
-         echo "<td>".__("New ticket in charge of", "engage")."</td><td>";
+         echo "<div class='row'>";
+         echo "<div class='hr-text'>";
+         echo "<i class='ti'></i>";
+         echo "<span>".__("Technician details and template", "engage")."</span>";
+         echo "</div>";
+         echo "<div class='row ps-4'>";
+         echo "<div class='form-field row col-12  mb-2'>";
+         echo "<label class='col-form-label col-xxl-4 text-xxl-end'>".__("New ticket in charge of", "engage")."</label>";
          User::dropdown(['name'   => 'users_id_tech',
                'right'  => 'interface',
                'value'  => $config->fields['users_id_tech'],
                'emptylabel' => $entity->getEntityID() ? __('Inherit from the parent'): Dropdown::EMPTY_VALUE,
                'width'  => '250px'
          ]);
-         echo "</td></tr>";
-         echo "<td>".__("ITIL followup template to use", "engage")."</td><td>";
+         echo "</div></div>";
+
+         echo "<div class='row ps-4'>";
+         echo "<div class='form-field row col-12  mb-2'>";
+         echo "<label class='col-form-label col-xxl-4 text-xxl-end'>".__("ITIL followup template to use", "engage")."</label>";
          ITILFollowupTemplate::dropdown(['name'   => 'itil_followup',
                'value'  => $config->fields['itil_followup'],
                'width'  => '250px',
                'comments' => false
          ]);
-
-         echo "</td></tr>";
-         echo "</td><td>" . __('Recursive') . "</td><td colspan='3'>";
-         Dropdown::showYesNo("is_recursive", $config->fields['is_recursive']);
-         echo "</td></tr>\n";
+         echo "</div></div>";
+         echo "</div>";
       }
 
-      //Html::closeForm();
-      $config->showFormButtons(['withtemplate' => 0,'candel'=> false]);
+      TemplateRenderer::getInstance()->display('@engage/footer_form.html.twig', [
+         'canedit'   => Session::haveRight(self::$rightname, UPDATE),
+         'config'    => $config
+      ]);
 
       return false;
    }

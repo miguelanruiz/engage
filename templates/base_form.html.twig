@@ -29,71 +29,16 @@
  # @link        https://github.com/miguelanruiz/engage
  # --------------------------------------------------------------------------
  #}
-
-{% extends '@engage/base_form.html.twig' %}
-{% import 'components/form/fields_macros.html.twig' as fields %}
-
-
-{% set field_options = {
-    'field_class': 'col-12 col-xxl-6 col-sm-6',
-    'label_class': 'col-xxl-8',
-    'input_class': 'col-xxl-4',
-} %}
-
-{% set field_options = {
-    'field_class': 'col-12 col-xxl-6 col-sm-6',
-    'full_width': true,
-} %}
-
-{% block config_fields %}
-
-<div class="hr-text">
-    <i class="ti"></i>
-    <span>{{ __('Tech in charge') }}</span>
-</div>
-
-<div class="row ps-4">
-
-{{ fields.dropdownYesNo(
-    'is_active',
-    config.fields['is_active'],
-    __('Enable'),
-    {
-        'width': 'auto',
-    }
-) }}
-
-</div>
-
-{% if config.fields['is_active'] %}
-
-<div class="row ps-4">
-
-    {{ fields.dropdownArrayField(
-        'ticket_type',
-        config.fields['ticket_type'],
-        [
-            __('Incident'),
-            __('Request'),
-            __('Incident + Request'),
-        ],
-        __('Ticket type'),
-        {
-            'width': 'auto',
-        }
-    ) }}
-
-    {{ fields.checkboxField(
-        'is_recursive',
-        config.fields['is_recursive'],
-        __('Recursive'),
-        {
-            'width': 'auto',
-        }
-    ) }}
-
-</div>
-
+ 
+{% if canedit %}
+    <form name="engageconfig_form"
+          action="{{ config.getFormUrl() }}"
+          method="post"
+          data-track-changes="true">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}" />
 {% endif %}
 
-{% endblock %}
+<div class="row">
+    {% block config_fields %}
+    {% endblock %}
+</div>

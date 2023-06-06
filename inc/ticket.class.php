@@ -124,6 +124,12 @@ class PluginEngageTicket extends CommonDBTM {
 			return;
 		}
 
+		if ($config->fields['ticket_type'] != PluginEngageConfig::MIXED 
+			&& $item->fields['type'] != $config->fields['ticket_type']){
+			//Not allowed
+			return;
+		}
+
 		$ticket_r = $_SESSION["glpiactiveprofile"]['ticket'];
 
 		//impersonating as Technician
