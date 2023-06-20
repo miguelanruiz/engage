@@ -52,5 +52,6 @@
         <input type="hidden" name="id" value="{{ id }}" />
         {% endif %}
         <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}" />
+        <input type="hidden" name="entities_id" value="{{ entity }}" />
     </form>
 {% endif %}

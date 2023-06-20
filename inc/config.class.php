@@ -67,6 +67,25 @@ class PluginEngageConfig extends CommonDBTM {
       return __('Engage', 'engage');
    }
 
+
+   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+
+      if ($item->getType()=='Entity') {
+            return self::getName();
+      }
+      return '';
+   }
+
+
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+
+      if ($item->getType()=='Entity') {
+         self::showConfigForm($item);
+      }
+      return true;
+   }
+   
+
    /**
     * Check if the passed itemtype is in the blacklist
     *
@@ -262,27 +281,11 @@ class PluginEngageConfig extends CommonDBTM {
 
       TemplateRenderer::getInstance()->display('@engage/footer_form.html.twig', [
          'canedit'   => Session::haveRight(self::$rightname, UPDATE),
+         'entity'    => $entity->getEntityID(),
          'config'    => $config
       ]);
 
       return false;
    }
 
-
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-
-      if ($item->getType()=='Entity') {
-            return self::getName();
-      }
-      return '';
-   }
-
-
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-
-      if ($item->getType()=='Entity') {
-         self::showConfigForm($item);
-      }
-      return true;
-   }
 }

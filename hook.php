@@ -72,7 +72,7 @@ function plugin_engage_install()
 
    $migration->addField($table,'is_active','boolean',['value' => '1']);
    $migration->displayMessage("New feature for disable interaction.");
-   $migration->addField($table,'ticket_type','int',['value' => '3']);
+   $migration->addField($table,'ticket_type','int',['value' => '0']);
    $migration->displayMessage("New feature for restrict incident or demand ticket.");
 
    $migration->executeMigration();
