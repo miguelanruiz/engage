@@ -39,7 +39,7 @@ class PluginEngageConfig extends CommonDBTM {
    static private $_instance = NULL;
    static $rightname         = 'config';
 
-   const CONFIG_PARENT       = 0;
+   const USER_FROM_PARENT    = 0;
    
    const ENABLED             = 1;
    const DISABLED            = 0;
@@ -67,25 +67,22 @@ class PluginEngageConfig extends CommonDBTM {
       return __('Engage', 'engage');
    }
 
-
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
 
-      if ($item->getType()=='Entity') {
-            return self::getName();
+      if ($item->getType() == 'Entity' ) {
+         return self::getName();
       }
       return '';
    }
 
-
    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
 
-      if ($item->getType()=='Entity') {
+      if ($item->getType() == 'Entity') {
          self::showConfigForm($item);
       }
       return true;
    }
    
-
    /**
     * Check if the passed itemtype is in the blacklist
     *
@@ -95,20 +92,6 @@ class PluginEngageConfig extends CommonDBTM {
     */
     public static function canItemtype($itemtype = '') {
       return (!class_exists($itemtype) || $itemtype == 'Ticket');
-   }
-
-   /**
-    * Display the menu of plugin
-    *
-    */
-   public static function displayMenu($options = []){
-      global $CFG_GLPI;
-      $pConfig = new PluginEngageConfig();
-      $pConfig->fields['id'] = 1;
-      $pConfig->showConfigForm();
-   
-      return true;
-      
    }
 
    /**
@@ -129,44 +112,34 @@ class PluginEngageConfig extends CommonDBTM {
     * Default values for instance
     */
    public function post_getEmpty(){
-      $this->fields['id'] = 0;
-      $this->fields['users_id_tech'] = 0;
-      $this->fields['itil_followup'] = 0;
-      $this->fields['entities_id'] = 0;
-      $this->fields['is_recursive'] = 1;
-      $this->fields['is_active'] = 1;
-      $this->fields['ticket_type'] = self::MIXED;
+      $this->fields['id']              = 0;
+      $this->fields['users_id_tech']   = 0;
+      $this->fields['itil_followup']   = 0;
+      $this->fields['entities_id']     = NULL;
+      $this->fields['is_recursive']    = 1;
+      $this->fields['is_active']       = 1;
+      $this->fields['ticket_type']     = self::MIXED;
    }
 
    /**
     * Display the technician on Tickets
     */
-   public static function displayTechnician($options = []){
-      global $CFG_GLPI;
-      $pConfig = new PluginEngageConfig();
-      $pConfig->fields['id'] = 1;
-      $pConfig->showTechnicianLabel($options);
-   
+   public static function displayTechnician($item = []){
+
+      if (isset($item['item'])
+         && $item['item'] instanceof CommonDBTM){
+         self::showTechnicianLabel($item);
+      }
+
       return true;
    }
 
    /**
      * Get criteria to restrict to current entities of the user
      *
-     * @since 9.2
+     * @param string $value             entity ID used for look in database
      *
-     * @param string $table             table where apply the limit (if needed, multiple tables queries)
-     *                                  (default '')
-     * @param string $field             field where apply the limit (id != entities_id) (default '')
-     * @param mixed $value              entity to restrict (if not set use $_SESSION['glpiactiveentities']).
-     *                                  single item or array (default '')
-     * @param boolean $is_recursive     need to use recursive process to find item
-     *                                  (field need to be named recursive) (false by default, set to auto to automatic detection)
-     * @param boolean $complete_request need to use a complete request and not a simple one
-     *                                  when have acces to all entities (used for reminders)
-     *                                  (false by default)
-     *
-     * @return array of criteria
+     * @return PluginEngageConfig of instance
      */
    public static function getConfigForEntity($value = '') {
       // !='0' needed because consider as empty
@@ -192,7 +165,7 @@ class PluginEngageConfig extends CommonDBTM {
             }
             
          if($config->isNewItem() 
-            || ($config->fields['users_id_tech'] == PluginEngageConfig::CONFIG_PARENT 
+            || ($config->fields['users_id_tech'] == PluginEngageConfig::USER_FROM_PARENT
                && !$config->fields['is_active'] == PluginEngageConfig::DISABLED)){
             continue;
          }
@@ -207,34 +180,32 @@ class PluginEngageConfig extends CommonDBTM {
    }
 
    static function showTechnicianLabel($item) {
+      
       if (!self::canView()) {
             return false;
       }
 
-      if (isset($item['item'])
-         && $item['item'] instanceof CommonDBTM){
-         $itemtype = get_class($item['item']);
-         if(self::canItemtype($itemtype) && $item['item']->fields['entities_id'] >= 0){
-            $config = self::getConfigForEntity($item['item']->fields['entities_id']);
+      $itemtype = get_class($item['item']);
+      if(self::canItemtype($itemtype) && $item['item']->fields['entities_id'] >= 0){
+         $config = self::getConfigForEntity($item['item']->fields['entities_id']);
 
-            if($config->fields['users_id_tech'] && $config->fields['is_active']){
-               $whoare = User::getNameForLog($config->fields['users_id_tech']);
-            } else {
-               $whoare = __('Not assigned or disabled');
-            }
-
-            $field_class = "form-field row col-12 d-flex align-items-center mb-2";
-            $label_class = "col-form-label col-xxl-4 text-xxl-end";
-            $input_class = "col-xxl-8 field-container";
-            echo "<div class='$field_class'>";
-            echo "<label class='$label_class'>".
-               __('Technician', 'engage').
-            "</label>";
-            echo "<div class='$input_class'>";
-            echo "<span class='entity-badge' title='Technician in charge'><span class='text-nowrap'>".$whoare."</span></span>";
-            echo "</div>";
-            echo "</div>";
+         if($config->fields['users_id_tech'] && $config->fields['is_active']){
+            $whoare = User::getNameForLog($config->fields['users_id_tech']);
+         } else {
+            $whoare = __('Not assigned or disabled');
          }
+
+         $field_class = "form-field row col-12 d-flex align-items-center mb-2";
+         $label_class = "col-form-label col-xxl-4 text-xxl-end";
+         $input_class = "col-xxl-8 field-container";
+         echo "<div class='$field_class'>";
+         echo "<label class='$label_class'>".
+            __('Technician', 'engage').
+         "</label>";
+         echo "<div class='$input_class'>";
+         echo "<span class='entity-badge' title='Technician in charge'><span class='text-nowrap'>".$whoare."</span></span>";
+         echo "</div>";
+         echo "</div>";
       }
    }
 
@@ -285,7 +256,7 @@ class PluginEngageConfig extends CommonDBTM {
          'config'    => $config
       ]);
 
-      return false;
+      return true;
    }
 
 }

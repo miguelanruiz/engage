@@ -61,8 +61,7 @@ function plugin_init_engage()
         
         $PLUGIN_HOOKS[Hooks::PRE_ITEM_FORM]['engage'] = ['PluginEngageConfig','displayTechnician'];
         $PLUGIN_HOOKS[Hooks::ITEM_ADD]['engage'] = ['Ticket' => [ 'PluginEngageTicket','createFollowup']];
-        $PLUGIN_HOOKS['config_page']['engage'] = 'front/config.form.php';
-
+        //$PLUGIN_HOOKS['config_page']['engage'] = 'front/config.form.php';
     }
 }
 
